@@ -1,25 +1,23 @@
 # Discord.py Music Bot
 
-A simple music bot written in discord.py using youtube-dl. Use this as an example or a base for your own bot and extend it as you want. 
-
-Adapted from this [gist](https://gist.github.com/vbe0201/ade9b80f2d3b64643d854938d40a0a2d), Copyright (c) 2019 Valentin B.
+Um bot de música simples escrito em discord.py usando youtube-dl. Use isso como um exemplo ou uma base para seu próprio bot e estenda-o como quiser.
 
 ### Pre-Setup
 
-If you don't already have a discord bot, click [here](https://discordapp.com/developers/), accept any prompts then click "New Application" at the top right of the screen.  Enter the name of your bot then click accept.  Click on Bot from the panel from the left, then click "Add Bot."  When the prompt appears, click "Yes, do it!" 
+Se você ainda não tem um discord bot, clique [aqui] (https://discordapp.com/developers/), aceite as solicitações e clique em "Novo aplicativo" no canto superior direito da tela. Digite o nome do seu bot e clique em aceitar. Clique no bot no painel da esquerda e clique em "Adicionar bot". Quando o prompt aparecer, clique em "Sim, faça!"
 ![Left panel](https://i.imgur.com/hECJYWK.png)
 
-Then, click copy under token to get your bot's token. Your bot's icon can also be changed by uploading an image.
+Em seguida, clique em copiar sob o token para obter o token do seu bot. O ícone do seu bot também pode ser alterado enviando uma imagem.
 
 ![Bot token area](https://i.imgur.com/da0ktMC.png)
 
 ### Setup
 
-Create a file named `.env`
+Criar arquivo `.env`
 
-Add `TOKEN=<your bot token>`
+Adicionar `TOKEN=<your bot token>`
 
-Your .env file should look something like this:
+Seu arquivo .env deve ser parecido com este:
 
 ```
 TOKEN=<Bot token>
@@ -27,17 +25,17 @@ TOKEN=<Bot token>
 
 ### Uptime
 
-To keep your bot alive you need to make this repl into a webserver. The way you do that is that you `import keep_alive` (file included this repl) and call it `keep_alive()`.
+Para manter seu bot vivo, você precisa transformar esta repl em um servidor web. A maneira como você faz isso é que você `import keep_alive`e execute depois `keep_alive()`.
 
-Now that this repl is a server, all you have to do to keep your bot up is setup something to ping the site your bot made every 5 minutes or so.
+Agora que este repl é um servidor, tudo que você precisa fazer para manter seu bot ativo é configurar algo para executar o ping no site que seu bot fez a cada 5 minutos ou mais.
 
-Go to [uptimerobot.com](https://uptimerobot.com/) and create an accout if you dont have one.  After verifying your account, click "Add New Monitor".
+Depois entre no [uptimerobot.com](https://uptimerobot.com/) e crie uma conta se você não tiver uma.  Após verificar sua conta, clique em "Adicionar Novo Monitor".
 
-+ For Monitor Type select "HTTP(s)"
-+ In Friendly Name put the name of your bot
-+ For your url, put the url of the website made for your repl.
-+ Select any alert contacts you want, then click "Create Monitor" 
++ Para Tipo de monitor, selecione "HTTP (s)"
++ Em Nome Amigável coloque o nome do seu bot
++ Para o seu url, coloque o url do site feito para o seu repl.
++ Selecione os contatos de alerta desejados e clique em "Criar Monitor"
 ![Uptime robot example](https://i.imgur.com/Qd9LXEy.png)
 
-Your bot should now be good to go, with near 100% uptime.
+Seu bot agora deve estar pronto para funcionar, com quase 100% de tempo de atividade.
 
