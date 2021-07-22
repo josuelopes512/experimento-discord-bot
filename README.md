@@ -1,4 +1,4 @@
-# Discord.py Music Bot
+# Experimento-discord-bot Discord.py Music Bot
 
 Um bot de música simples escrito em discord.py usando youtube-dl. Use isso como um exemplo ou uma base para seu próprio bot e estenda-o como quiser.
 
