@@ -73,13 +73,10 @@ class YTDLSource(discord.PCMVolumeTransformer):
     @classmethod
     async def create_source(cls, ctx: commands.Context, search: str, *, loop: asyncio.BaseEventLoop = None):
         loop = loop or asyncio.get_event_loop()
-
         partial = functools.partial(cls.ytdl.extract_info, search, download=False, process=False)
         data = await loop.run_in_executor(None, partial)
-
         if data is None:
             raise YTDLError('Couldn\'t find anything that matches `{}`'.format(search))
-
         if 'entries' not in data:
             process_info = data
         else:
@@ -88,17 +85,13 @@ class YTDLSource(discord.PCMVolumeTransformer):
                 if entry:
                     process_info = entry
                     break
-
             if process_info is None:
                 raise YTDLError('Couldn\'t find anything that matches `{}`'.format(search))
-
         webpage_url = process_info['webpage_url']
         partial = functools.partial(cls.ytdl.extract_info, webpage_url, download=False)
         processed_info = await loop.run_in_executor(None, partial)
-
         if processed_info is None:
             raise YTDLError('Couldn\'t fetch `{}`'.format(webpage_url))
-
         if 'entries' not in processed_info:
             info = processed_info
         else:
@@ -469,17 +462,18 @@ class Music(commands.Cog):
 
         if not ctx.voice_state.voice:
             await ctx.invoke(self._join)
-
         async with ctx.typing():
             try:
                 source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
+                print("OK")
+                
             except YTDLError as e:
-                await ctx.send('Ocorreu um erro ao processar esta solicitação: {}'.format(str(e)))
+                await ctx.send('```css\nOcorreu um erro ao processar esta solicitação: {}\n```'.format(str(e)))
             else:
                 song = Song(source)
 
                 await ctx.voice_state.songs.put(song)
-                await ctx.send('Adicionado {}'.format(str(source)))
+                await ctx.send('```css\nAdicionado {}\n```'.format(str(source)))
 
     # @commands.command(name="help", help="Displays all the available commands")
     # async def help(self, ctx):

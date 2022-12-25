@@ -1,5 +1,7 @@
 language="python3"
 run="""
 export PATH="$PWD/node_modules/ffmpeg-static:$PATH"
+pip install git+https://github.com/baxterisme/pytube
+pip install --upgrade pip pynacl Flask qrcode pafy python-dotenv discord youtube-dl pyqrcode pypng python-decouple beautifulsoup4 requests
 python main.py
 """

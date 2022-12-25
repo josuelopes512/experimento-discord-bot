@@ -108,7 +108,7 @@ def user_input():
         parser.add_argument('-w', '--time', help='image age', type=str, required=False,
                             choices=['past-24-hours', 'past-7-days', 'past-month', 'past-year'])
         parser.add_argument('-wr', '--time_range',
-                            help='time range for the age of the image. should be in the format {"time_min":"MM/DD/YYYY","time_max":"MM/DD/YYYY"}',
+                            help='time range for the age of the image. should be in the format {"time_min":"YYYY-MM-DD","time_max":"YYYY-MM-DD"}',
                             type=str, required=False)
         parser.add_argument('-a', '--aspect_ratio', help='comma separated additional words added to keywords', type=str,
                             required=False,
@@ -193,10 +193,10 @@ class googleimagesdownload:
 
     def _extract_data_pack_ajax(self, data):
         lines = data.split('\n')
-        return json.loads(lines[3] + lines[4])[0][2]
+        return json.loads(lines[3])[0][2]
 
     def _image_objects_from_pack(self, data):
-        image_objects = json.loads(data)[31][0][12][2]
+        image_objects = json.loads(data)[31][-1][12][2]
         image_objects = [x for x in image_objects if x[0] == 1]
         return image_objects
 
@@ -292,12 +292,12 @@ class googleimagesdownload:
 
         element = browser.find_element_by_tag_name("body")
         # Scroll down
-        for i in range(30):
+        for i in range(50):
             element.send_keys(Keys.PAGE_DOWN)
             time.sleep(0.3)
 
         try:
-            browser.find_element_by_id("smb").click()
+            browser.find_element_by_xpath('//input[@value="Show more results"]').click()
             for i in range(50):
                 element.send_keys(Keys.PAGE_DOWN)
                 time.sleep(0.3)  # bot id protection
@@ -388,7 +388,7 @@ class googleimagesdownload:
             formatted_object['image_link'] = main[0]
             formatted_object['image_format'] = main[0][-1 * (len(main[0]) - main[0].rfind(".") - 1):]
             formatted_object['image_description'] = info['2003'][3]
-            formatted_object['image_host'] = info['183836587'][0]
+            formatted_object['image_host'] = info['2003'][17]
             formatted_object['image_source'] = info['2003'][2]
             formatted_object['image_thumbnail_url'] = data[2][0]
         except Exception as e:
@@ -501,13 +501,6 @@ class googleimagesdownload:
         else:
             lang_url = ''
 
-        if arguments['time_range']:
-            json_acceptable_string = arguments['time_range'].replace("'", "\"")
-            d = json.loads(json_acceptable_string)
-            time_range = ',cdr:1,cd_min:' + d['time_min'] + ',cd_max:' + d['time_max']
-        else:
-            time_range = ''
-
         if arguments['exact_size']:
             size_array = [x.strip() for x in arguments['exact_size'].split(',')]
             exact_size = ",isz:ex,iszw:" + str(size_array[0]) + ",iszh:" + str(size_array[1])
@@ -555,7 +548,7 @@ class googleimagesdownload:
                 else:
                     built_url = built_url + ',' + ext_param
                     counter += 1
-        built_url = lang_url + built_url + exact_size + time_range
+        built_url = lang_url + built_url + exact_size
         return built_url
 
     # building main search URL
@@ -876,6 +869,12 @@ class googleimagesdownload:
             if len(image_objects) == 0:
                 print("no_links")
                 break
+            #code added here to attempt to implement offset correctly
+            #was "count < int(arguments['offset'])" in hardikvasa code, this seems
+            # to be contrary to the implementation details. 
+            elif arguments['offset'] and count <= int(arguments['offset']):
+                    count += 1
+                    #page = page[end_content:]
             else:
                 # format the item for readability
                 object = self.format_object(image_objects[i])
@@ -1040,6 +1039,14 @@ class googleimagesdownload:
         if arguments['proxy']:
             os.environ["http_proxy"] = arguments['proxy']
             os.environ["https_proxy"] = arguments['proxy']
+
+        # Add time range to keywords if asked
+        time_range = ''
+        if arguments['time_range']:
+            json_acceptable_string = arguments['time_range'].replace("'", "\"")
+            d = json.loads(json_acceptable_string)
+            time_range = ' after:' + d['time_min'] + ' before:' + d['time_max']
+
             ######Initialization Complete
         total_errors = 0
         for pky in prefix_keywords:  # 1.for every prefix keywords
@@ -1069,6 +1076,7 @@ class googleimagesdownload:
 
                     params = self.build_url_parameters(arguments)  # building URL with params
 
+                    search_term += time_range
                     url = self.build_search_url(search_term, params, arguments['url'], arguments['similar_images'],
                                                 arguments['specific_site'],
                                                 arguments['safe_search'])  # building main search url
