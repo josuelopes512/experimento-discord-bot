@@ -9,6 +9,7 @@ from time import sleep
 from bs4 import BeautifulSoup
 import re
 import requests as req
+import platform
 
 
 import os
@@ -74,7 +75,10 @@ class ImageCog(commands.Cog):
         # store all the names to the files
         self.image_names = []
         path = os.getcwd()
-        direct = f"{path}\\{self.download_folder}"
+        if(platform.system() == 'Windows'):
+            direct = f"{path}\\{self.download_folder}"
+        elif (platform.system() == 'Linux'):
+            direct = f"{path}/{self.download_folder}"
         if os.listdir(direct):
             for filename in os.listdir(f"{path}\\{self.download_folder}"):
                 self.image_names.append(os.path.join(
