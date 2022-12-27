@@ -1,8 +1,13 @@
-from dotenv import load_dotenv
+
 from keep_alive import keep_alive
 from pathlib import Path
 import argparse as ap
+import platform
 import os
+
+if(platform.system() == 'Windows'):
+    from dotenv import load_dotenv
+    load_dotenv()
 
 from discord.ext import commands
 from cogs.image_cog import *
@@ -11,7 +16,6 @@ from cogs.music import *
 from cogs.openapi_cog import *
 from cogs.fordevs_cog import *
 
-load_dotenv()
 
 Path('downloads').mkdir(exist_ok=True)
 
@@ -36,4 +40,4 @@ async def on_ready():
     print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(bot))
 
 keep_alive()
-bot.run(debug=os.getenv('TOKEN'))
+bot.run(os.getenv('TOKEN'))
