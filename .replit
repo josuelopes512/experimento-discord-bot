@@ -2,5 +2,6 @@ language="python3"
 run="""
 export PATH="$PWD/node_modules/ffmpeg-static:$PATH"
 pip install -r req.txt
+pip install discord==1.7.3 discord.py==1.7.3 beautifulsoup4 Flask fordev pypng PyQRCode python-decouple python-dotenv pytube openai pafy youtube-dl requests
 python main.py
 """
