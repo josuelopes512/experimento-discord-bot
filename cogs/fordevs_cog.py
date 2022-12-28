@@ -1,6 +1,7 @@
 from fordev.generators.company import company
 from fordev.generators import people
 from discord.ext import commands
+from googletrans import Translator
 
 
 class FordevCog(commands.Cog):
@@ -29,6 +30,16 @@ class FordevCog(commands.Cog):
                 text += f"{k}: {v}\n"
             
             await ctx.send(f"```{text}```")
+        except Exception as e:
+            await ctx.send(f"Erro: {e}")
+    
+    @commands.command(name="traduza", help="Tradutor Online")
+    async def tradutor(self, ctx, *args):
+        try:
+            query = " ".join(args)
+            translation = Translator().translate(text=query, dest='pt')
+            
+            await ctx.send(f"```{translation.src.upper()}: \n\t{query} \nPT-BR:  \n\t{translation.text}```")
         except Exception as e:
             await ctx.send(f"Erro: {e}")
 
