@@ -6,10 +6,12 @@ from threading import Thread
 from discord.ext import commands
 from pytube import YouTube, Search
 from time import sleep
+from gtts import gTTS
 from bs4 import BeautifulSoup
 import re
 import requests as req
 import platform
+import uuid
 
 
 import os
@@ -75,7 +77,7 @@ class ImageCog(commands.Cog):
         # store all the names to the files
         self.image_names = []
         path = os.getcwd()
-        if(platform.system() == 'Windows'):
+        if (platform.system() == 'Windows'):
             direct = f"{path}\\{self.download_folder}"
         elif (platform.system() == 'Linux'):
             direct = f"{path}/{self.download_folder}"
@@ -110,6 +112,9 @@ class ImageCog(commands.Cog):
         # img.save(file_img)
         # print(img)
         await ctx.send(file=discord.File('code.png'))
+
+        if os.path.exists("code.png"):
+            os.remove("code.png")
 
     @commands.command(name="video", help="Retorna o video do YouTube")
     async def view_video(self, ctx, *args):
@@ -187,7 +192,11 @@ class ImageCog(commands.Cog):
                 if content:
                     with open(f"{title}.mp4", 'wb') as f:
                         f.write(content)
+
                     await ctx.send(file=discord.File(f"{title}.mp4"))
+
+                    if os.path.exists(f"{title}.mp4"):
+                        os.remove(f"{title}.mp4")
                 else:
                     print("NOT FOUND")
             except Exception as e:
@@ -197,3 +206,19 @@ class ImageCog(commands.Cog):
                 pass
                 # if os.path.exists(f"{title}.mp4"):
                 #     os.remove(f"{title}.mp4")
+
+    @commands.command(name="text2voice", help="Convert Text to Voice")
+    async def convert(self, ctx, *args):
+        query = " ".join(args)
+
+        try:
+            filename = uuid.uuid4().hex
+            tts = gTTS(query, lang='pt-br')
+            tts.save(f"{filename}.mp3")
+
+            await ctx.send(file=discord.File(f"{filename}.mp3"))
+
+            if os.path.exists(f"{filename}.mp3"):
+                os.remove(f"{filename}.mp3")
+        except Exception as e:
+            await ctx.send(f"Erro: {e}")

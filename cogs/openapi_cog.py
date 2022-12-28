@@ -1,7 +1,9 @@
 import os
 import openai
+import discord
 from discord.ext import commands
 from time import sleep
+from .utils.utils import get_image, save_file, delete_file
 
 # ids = [i["id"] for i in openai.Model.list()["data"]]
 
@@ -48,6 +50,14 @@ class BotCog(commands.Cog):
             )
             
             result = response["data"][0]["url"]
-            await ctx.send(result)
+            
+            try:
+                filename, data = get_image(result)
+                save_file(filename, data)
+                await ctx.send(file=discord.File(filename))
+                delete_file(filename)
+            except:
+                await ctx.send(result)
+            
         except Exception as e:
             await ctx.send(f"Erro: {e}")
