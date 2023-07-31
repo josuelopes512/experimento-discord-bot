@@ -58,6 +58,7 @@ while (not server_status):
     except Exception as e:
         logging.error(f"Error: {e}")
         logging.warning(f"Tentativas de Conexão: {tentativas}")
+        print(f"Tentativas de Conexão: {tentativas}")
         server_status = False
         tentativas += 1
         sleep(605)
