@@ -18,6 +18,7 @@ pafy = "^0.5.5"
 pypng = "^0.0.21"
 pytube = "^11.0.2"
 bs4 = "^0.0.1"
+unlimitedgpt = "^0.1.7"
 
 [tool.poetry.dev-dependencies]
 
