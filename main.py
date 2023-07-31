@@ -16,6 +16,7 @@ from cogs.music_cog import *
 from cogs.music import *
 from cogs.openapi_cog import *
 from cogs.fordevs_cog import *
+from cogs.chatgpt_cog import *
 
 logging.basicConfig(
     level=logging.INFO, 
@@ -34,6 +35,7 @@ bot = commands.Bot(
 )
 
 # bot = commands.Bot(command_prefix= '!')
+bot.add_cog(ChatGPTCog(bot))
 bot.add_cog(ImageCog(bot))
 bot.add_cog(MusicCog(bot))
 bot.add_cog(Music(bot))
