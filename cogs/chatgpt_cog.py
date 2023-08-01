@@ -1,6 +1,7 @@
 from discord.ext import commands
 from UnlimitedGPT import ChatGPT
 import os
+import platform
 from time import sleep
 from threading import Thread
 
@@ -23,14 +24,18 @@ def divide_text(text, max_length):
     return text_parts
 
 def reload_chatgpt(session_token):
-    return ChatGPT(session_token=session_token, verbose=True, headless=False)
+    return ChatGPT(session_token=session_token, verbose=True, headless=True)
 
 class ChatGPTCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.token = os.getenv("CHATGPT_TOKEN")
         self.conversation_id = os.getenv("CONVERSATION_ID")
-        self.api = ChatGPT(session_token=self.token, verbose=True, headless=False)
+        
+        if platform.system() == "Linux":
+            self.api = ChatGPT(session_token=self.token, verbose=True, headless=True, driver_executable_path='./chromedriver/chromedriver')
+        else:
+            self.api = ChatGPT(session_token=self.token, verbose=True, headless=True)
         
         if self.conversation_id:
             self.api.switch_conversation(self.conversation_id)
