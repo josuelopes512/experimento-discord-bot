@@ -1,0 +1,6 @@
+language="python3"
+run="""
+export PATH="$PWD/node_modules/ffmpeg-static:$PATH"
+pip install -r req.txt
+python main.py
+"""
