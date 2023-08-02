@@ -31,11 +31,7 @@ class ChatGPTCog(commands.Cog):
         self.bot = bot
         self.token = os.getenv("CHATGPT_TOKEN")
         self.conversation_id = os.getenv("CONVERSATION_ID")
-        
-        if platform.system() == "Linux":
-            self.api = ChatGPT(session_token=self.token, verbose=True, headless=True, driver_executable_path='./chromedriver/chromedriver')
-        else:
-            self.api = ChatGPT(session_token=self.token, verbose=True, headless=True)
+        self.api = ChatGPT(session_token=self.token, verbose=True, headless=True)
         
         if self.conversation_id:
             self.api.switch_conversation(self.conversation_id)

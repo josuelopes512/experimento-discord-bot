@@ -56,7 +56,6 @@ class ChatGPT:
         verbose: bool = False,
         headless: bool = False,
         chrome_args: list = [],
-        driver_executable_path = None
     ) -> None:
         self._session_token = session_token
         self._conversation_id = conversation_id
@@ -66,7 +65,6 @@ class ChatGPT:
         self._chrome_args = chrome_args
         self._clicked_buttons = False
         self._history_and_training_enabled = True
-        self.driver_executable_path = driver_executable_path
         self._init_logger(verbose)
 
         if self._proxy and not re.findall(
@@ -157,7 +155,14 @@ class ChatGPT:
         for arg in self._chrome_args:
             options.add_argument(arg)
         try:
-            self.driver = ChatGPTDriver(options=options, headless=self._headless, driver_executable_path=self.driver_executable_path)
+            if system() == 'Windows':
+                self.driver = ChatGPTDriver(
+                    options=options, use_subprocess=True, headless=self._headless)
+            elif system() == 'Linux':
+                options.add_argument("--disable-setuid-sandbox")
+                options.binary_location = '/usr/bin/google-chrome'
+                __executable_path = "/usr/bin/chromedriver"
+                self.driver = ChatGPTDriver(options=options, headless=self._headless, executable_path=__executable_path)
         except TypeError as e:
             if str(e) == "expected str, bytes or os.PathLike object, not NoneType":
                 raise ValueError("Chrome installation not found")
@@ -273,6 +278,8 @@ class ChatGPT:
 
         self.logger.debug("Validating authorization...")
         response = self.driver.page_source
+        print(f"-------------- response: {response} --------------")
+        
         if response[0] != "{":
             response = self.driver.find_element(By.TAG_NAME, "pre").text
         response = loads(response)
