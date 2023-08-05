@@ -142,3 +142,5 @@ dmypy.json
 
 logger.txt
 *env-*
+*.mp3
+*.png
