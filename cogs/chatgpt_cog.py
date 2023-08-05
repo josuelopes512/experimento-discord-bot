@@ -1,7 +1,7 @@
 from discord.ext import commands
+import requests
 from UnlimitedGPT import ChatGPT
 import os
-import platform
 from time import sleep
 from threading import Thread
 
@@ -31,13 +31,20 @@ class ChatGPTCog(commands.Cog):
         self.bot = bot
         self.token = os.getenv("CHATGPT_TOKEN")
         self.conversation_id = os.getenv("CONVERSATION_ID")
-        self.api = ChatGPT(session_token=self.token, verbose=True, headless=True)
-        
-        if self.conversation_id:
-            self.api.switch_conversation(self.conversation_id)
+        self.api = None
     
     @commands.command(name="sendmessage", help="Integração com o ChatGPT")
     async def sendmessage(self, ctx, *args):
+        try:
+            if not self.api:
+                self.api = ChatGPT(session_token=self.token, verbose=True, headless=True)
+            
+                if self.conversation_id:
+                    self.api.switch_conversation(self.conversation_id)
+        except Exception as e:
+            await ctx.send(f"Erro: {e}")
+            return
+
         query = " ".join(args)
 
         try:
@@ -150,5 +157,28 @@ class ChatGPTCog(commands.Cog):
             Thread(target=restart).start()
             
             await ctx.send(f"```reload_chatgpt OK```")
+        except Exception as e:
+            await ctx.send(f"Erro: {e}")
+    
+    @commands.command(name="addtokenchatgpt", help="Integração com o ChatGPT")
+    async def addtokenchatgpt(self, ctx, *args):
+        req = requests.get(ctx.message.attachments[0].url)
+        
+        if not req.ok:
+            raise Exception("Error")
+        
+        query = req.text
+        try:
+            del self.api
+            del self.token
+            del os.environ["CHATGPT_TOKEN"]
+            
+            self.api = None
+            self.token = None
+            
+            os.environ["CHATGPT_TOKEN"] = query
+            self.token = query
+            
+            await ctx.send(f"OK Token Configurado")
         except Exception as e:
             await ctx.send(f"Erro: {e}")

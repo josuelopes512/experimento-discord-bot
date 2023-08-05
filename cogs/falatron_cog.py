@@ -49,3 +49,17 @@ class FalatronCog(commands.Cog):
                 await ctx.send(f"```{new_data}```")
         except Exception as e:
             await ctx.send(f"Erro: {e}")
+    
+    @commands.command(name="addtokenfalatron", help="Integração com o Falatron")
+    async def addtokenfalatron(self, ctx, *args):
+        query = " ".join(args)
+        try:
+            del self.falatron
+            del os.environ["FALATRON_CF_CLEARANCE"]
+            
+            os.environ["FALATRON_CF_CLEARANCE"] = query
+            self.falatron = Falatron(cf_clearance=query)
+            
+            await ctx.send(f"OK Token Configurado")
+        except Exception as e:
+            await ctx.send(f"Erro: {e}")

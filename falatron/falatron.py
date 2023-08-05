@@ -98,6 +98,6 @@ class Falatron:
             os.makedirs("audios")
         
         with open(f"./audios/{uuid_name}.mp3", "wb") as f:
-            data = b64file.replace("data:audio/mp3;base64,", "")
+            data = b64file.replace("data:audio/mp3;base64,", "") if "data:audio/mp3;base64," in b64file else b64file
             decode_string = base64.b64decode(data)
             f.write(decode_string)
